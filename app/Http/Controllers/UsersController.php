@@ -29,9 +29,10 @@ class UsersController extends Controller
     }
 
     public function show(User $user) {
-        //为什么单独输出就可以，输出全部$user看不到name
-        // var_dump($user->name);
-        return view('users.show', compact('user'));
+        $statuses = $user->statuses()
+                        ->orderBy('created_at','desc')
+                        ->paginate(30);
+        return view('users.show', compact('user', 'statuses'));
     }
 
     //用户创建
@@ -108,4 +109,6 @@ class UsersController extends Controller
         session()->flash('success', '恭喜你，激活成功！');
         return redirect()->route('users.show', [$user]);
     }
+
+
 }
